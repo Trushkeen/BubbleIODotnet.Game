@@ -15,6 +15,9 @@ namespace BubbleIODotnet.Client
     {
         public IPAddress Address { get; set; }
         public int Port { get; set; }
+        public string Username { get; set; }
+
+        private bool ExitAfterConfirmation = false;
 
         public ConnectionForm()
         {
@@ -23,8 +26,9 @@ namespace BubbleIODotnet.Client
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            var splitted = tbAddress.Text.Split(':');
+            Username = tbUsername.Text;
 
+            var splitted = tbAddress.Text.Split(':');
 
             try
             {
@@ -33,27 +37,38 @@ namespace BubbleIODotnet.Client
                     throw new Exception();
                 }
 
-                IPAddress.Parse(splitted[0]);
-                Port = Convert.ToInt32(splitted[0]);
+                Address = IPAddress.Parse(splitted[0]);
+                Port = Convert.ToInt32(splitted[1]);
             }
             catch (Exception)
             {
                 MessageBox.Show("Неправильный формат адреса", "ОШИБКА!!!!!!!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+            ExitAfterConfirmation = true;
+            this.Close();
         }
 
         private void ConnectionForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            var res = MessageBox.Show("Вы точно-точно, ну прямо уверены, что хотите выйти?", "Подтверждение",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Information);
-            if (res == DialogResult.Yes)
+            if (!ExitAfterConfirmation)
             {
-                Application.Exit();
+                var res = MessageBox.Show("Вы точно-точно, ну прямо уверены, что хотите выйти?", "Подтверждение",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+                if (res == DialogResult.Yes)
+                {
+                    Application.Exit();
+                }
+                else
+                {
+                    e.Cancel = true;
+                }
             }
-            else
-            {
-                e.Cancel = true;
-            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            tbAddress.Text = "127.0.0.1:8000";
+            tbUsername.Text = Guid.NewGuid().ToString();
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
 
 namespace BubbleIODotnet.Client
 {
@@ -130,6 +131,7 @@ namespace BubbleIODotnet.Client
 
         private Timer ObjectSpawner;
 
+        //move this to server server
         private void SpawnObject(object sender, EventArgs e)
         {
             Player.Size -= 1;
