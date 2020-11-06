@@ -123,6 +123,10 @@ namespace BubbleIODotnet.Client
 
             lblPlayerPosition.Text = Player.Location.ToString();
             lblPlayerSize.Text = Player.Size.ToString();
+            if (OtherPlayers.Count > 0)
+            {
+                lblOtherPlayerInfo.Text = $"Other player 1, location {OtherPlayers.First().Location}, size {OtherPlayers.First().Size}";
+            }
         }
 
         #endregion

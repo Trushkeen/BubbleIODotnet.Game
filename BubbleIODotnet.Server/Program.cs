@@ -16,36 +16,52 @@ namespace BubbleIODotnet.Server
             GameModel game = new GameModel();
             UdpClient server = new UdpClient(8000);
             IPEndPoint anyIP = new IPEndPoint(IPAddress.Any, 0);
-            int numOfPackage = 0;
-            int numOfDisplayedPackage = 5;
+            int numOfReceivedPackage = 0;
+            int numOfDisplayedPackage = 1000;
 
             Console.WriteLine("Initialized game");
 
             while (true)
             {
-                var decoded = Encoding.UTF8.GetString(server.Receive(ref anyIP));
-                numOfPackage++;
-
-                //deserialize xml info
-                var playerInfo = XMLDeserializer.DeserializePlayerInfo(decoded);
-                if (!game.IsPlayerPresents(playerInfo.Username))
+                Bubble playerInfo = null;
+                try
                 {
-                    game.Players.Add(playerInfo);
+                    var decoded = Encoding.UTF8.GetString(server.Receive(ref anyIP));
+                    numOfReceivedPackage++;
+                    playerInfo = XMLDeserializer.DeserializePlayerInfo(decoded);
+                }
+                catch
+                {
+                    Console.WriteLine("Someone disconnected");
                 }
 
-                if (numOfPackage >= numOfDisplayedPackage)
+                if (playerInfo != null)
                 {
-                    Console.WriteLine($"Package receiver: player {playerInfo.Username}, Position {playerInfo.Location}, Size {playerInfo.Size}");
-                    numOfPackage = 0;
-                }
-
-                foreach (var ip in game.Players)
-                {
-                    var encoded = Encoding.UTF8.GetBytes(XMLSerializer.SerializePlayerInfo(ip).OuterXml);
-                    
-                    foreach (var player in game.Players)
+                    if (!game.IsPlayerPresents(playerInfo.Username))
                     {
-                        server.Send(encoded, encoded.Length, player.Endpoint);
+                        game.Players.Add(playerInfo);
+                    }
+
+                    var playerUpd = game.FindPlayerByName(playerInfo.Username);
+                    playerUpd.Location = playerInfo.Location;
+                    playerUpd.Size = playerInfo.Size;
+
+                    if (numOfReceivedPackage >= numOfDisplayedPackage)
+                    {
+                        //Console.WriteLine($"Package received: player {playerInfo.Username}, Position {playerInfo.Location}, Size {playerInfo.Size}");
+                        numOfReceivedPackage = 0;
+                    }
+                }
+
+                foreach (var player in game.Players)
+                {
+                    var encoded = Encoding.UTF8.GetBytes(XMLSerializer.SerializePlayerInfo(player).OuterXml);
+
+                    foreach (var ip in game.Players)
+                    {
+                        server.Send(encoded, encoded.Length, ip.Endpoint);
+
+                        //Console.WriteLine($"Package sent to player {player.Username} about {ip.Username}, Position {player.Location}, Size {player.Size}");
                     }
                 }
             }

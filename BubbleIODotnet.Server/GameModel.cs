@@ -30,5 +30,17 @@ namespace BubbleIODotnet.Server
             }
             return found;
         }
+
+        public Bubble FindPlayerByName(string username)
+        {
+            foreach (var item in Players)
+            {
+                if (item.Username == username)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
     }
 }

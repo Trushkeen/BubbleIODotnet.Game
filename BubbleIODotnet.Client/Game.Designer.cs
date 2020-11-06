@@ -32,6 +32,7 @@
             this.lblPlayerPosition = new System.Windows.Forms.Label();
             this.field = new System.Windows.Forms.Panel();
             this.lblPlayerSize = new System.Windows.Forms.Label();
+            this.lblOtherPlayerInfo = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // lblKeyPressed
@@ -72,11 +73,20 @@
             this.lblPlayerSize.TabIndex = 1;
             this.lblPlayerSize.Text = "Size";
             // 
+            // lblOtherPlayerInfo
+            // 
+            this.lblOtherPlayerInfo.Location = new System.Drawing.Point(330, 659);
+            this.lblOtherPlayerInfo.Name = "lblOtherPlayerInfo";
+            this.lblOtherPlayerInfo.Size = new System.Drawing.Size(322, 13);
+            this.lblOtherPlayerInfo.TabIndex = 3;
+            this.lblOtherPlayerInfo.Text = "Other Player Info";
+            // 
             // Game
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1264, 681);
+            this.Controls.Add(this.lblOtherPlayerInfo);
             this.Controls.Add(this.field);
             this.Controls.Add(this.lblPlayerSize);
             this.Controls.Add(this.lblPlayerPosition);
@@ -97,6 +107,7 @@
         private System.Windows.Forms.Label lblPlayerPosition;
         private System.Windows.Forms.Panel field;
         private System.Windows.Forms.Label lblPlayerSize;
+        private System.Windows.Forms.Label lblOtherPlayerInfo;
     }
 }
 

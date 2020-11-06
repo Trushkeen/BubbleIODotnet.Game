@@ -50,9 +50,8 @@ namespace BubbleIODotnet.Client
 
             //Setup server updating
             ServerUpdateTimer = new Timer();
-            ServerUpdateTimer.Interval = 1000 / 20;
+            ServerUpdateTimer.Interval = 1000 / 60;
             ServerUpdateTimer.Tick += StartServerMessaging;
-            System.Threading.Thread thread = new System.Threading.Thread(UpdatePlayersList);
 
             Bubble player = new Bubble();
             player.Endpoint = (IPEndPoint)Client.Client.LocalEndPoint;
@@ -92,7 +91,8 @@ namespace BubbleIODotnet.Client
                 {
                     if (bubble.Username == OtherPlayers[i].Username)
                     {
-                        OtherPlayers[i] = bubble;
+                        OtherPlayers[i].Location = bubble.Location;
+                        OtherPlayers[i].Size = bubble.Size;
                         return;
                     }
                 }
